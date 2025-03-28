@@ -1,0 +1,135 @@
+openapi: 3.1.0
+info:
+  title: PressReader My Publications & Articles API
+  description: API to retrieve saved publications, publication info, content restrictions, ad media, and article texts from PressReader.
+  version: 1.0.0
+servers:
+  - url: https://ingress.pressreader.com
+paths:
+  /services/catalog/v1/routes/country/publication:
+    get:
+      operationId: getMyPublications
+      summary: Retrieve saved publications for the user
+      parameters:
+        - name: country
+          in: query
+          required: true
+          schema:
+            type: string
+          example: catalog
+        - name: publication
+          in: query
+          required: true
+          schema:
+            type: string
+          example: mypublications
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of saved publications
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /services/contentRestrictions/issues:
+    get:
+      operationId: getContentRestrictions
+      summary: Retrieve content restrictions for a specific issue
+      parameters:
+        - name: issues
+          in: query
+          required: true
+          schema:
+            type: string
+          example: 52672025032800000000001001
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Content restriction details
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /services/richmedia/adgets:
+    get:
+      operationId: getAdgets
+      summary: Retrieve ad media information for an issue
+      parameters:
+        - name: issueid
+          in: query
+          required: true
+          schema:
+            type: string
+          example: 52672025032800000000001001
+        - name: layoutVersion
+          in: query
+          required: false
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Ad media information
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /services/articles/GetItems:
+    get:
+      operationId: getArticleTexts
+      summary: Retrieve full text content of articles
+      parameters:
+        - name: comment
+          in: query
+          required: false
+          schema:
+            type: string
+          example: LatestByAll
+        - name: viewType
+          in: query
+          required: false
+          schema:
+            type: string
+          example: text
+        - name: articles
+          in: query
+          required: true
+          schema:
+            type: string
+            description: Comma-separated list of article IDs
+          example: 281543706726678,281552296661270
+        - name: IsHyphenated
+          in: query
+          required: false
+          schema:
+            type: boolean
+          example: true
+        - name: options
+          in: query
+          required: false
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Article texts
+          content:
+            application/json:
+              schema:
+                type: object
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
